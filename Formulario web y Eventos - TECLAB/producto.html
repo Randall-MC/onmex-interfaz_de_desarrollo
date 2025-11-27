@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Nuevo Producto</title>
+    <link rel="icon" href="images/icon-fruits-64.png" type="image/png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+    <script defer src="js/formulario.js"></script>
+  </head>
+  <body>
+    <header>
+      <h1>Ventadefrutas.com</h1>
+      <h2>Ingresar nuevos productos</h2>
+      <hr />
+    </header>
+    <main>
+      <form action="#">
+        <div class="formulario">
+          <label for="inputCodigo">Código (autonumérico)</label>
+          <input type="number" name="inputCodigo" id="inputCodigo" readonly />
+          <label for="inputNombre">Nombre del producto</label>
+          <input
+            type="text"
+            name="inputNombre"
+            id="inputNombre"
+            maxlength="30"
+          />
+          <label for="inputImporte">Importe (en $)</label>
+          <input
+            type="number"
+            name="inputImporte"
+            id="inputImporte"
+            step="0.01"
+            min="0"
+          />
+          <label for="inputStock">Stock (unidades)</label>
+          <input
+            type="number"
+            name="inputStock"
+            id="inputStock"
+            step="0"
+            min="0"
+            max="10000"
+          />
+          <button id="btnGuardar">GUARDAR</button>
+          <button type="submit" class="button button-outline">CANCELAR</button>
+        </div>
+      </form>
+    </main>
+
+    <!-- Pruebas -->
+    <div class="carrito-image"></div>
+  </body>
+</html>
