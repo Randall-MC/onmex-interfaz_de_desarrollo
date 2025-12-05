@@ -3,10 +3,9 @@
 // API 1
 // Importa el array "productos" en el archivo "productos.js"
 import { productos } from "./productos.js";
-import { agregarAlCarrito } from "./carrito.js";
+import { agregarAlCarrito, carritoFrutas } from "./carrito.js";
 // Limpiar el contenido actual de "div.container"
 const contenedor = document.querySelector(".container");
-contenedor.innerHTML = "";
 // Crear la función "retornarCardHTML" que recibe como parámetro un objeto y que devuelva un bloque HTML (card)
 const retornarCardHTML = function (producto) {
   const card = `<div class="card">
@@ -36,7 +35,16 @@ const cargarProductos = function (productos) {
 };
 // Se ejecuta la función cuando el documento HTML está completamente analizado
 document.addEventListener("DOMContentLoaded", () => {
-  cargarProductos(productos);
+  const paginaActual = window.location.pathname;
+  if (paginaActual.includes("index") || paginaActual === "/") {
+    contenedor.innerHTML = "";
+    cargarProductos(productos);
+  }
+
+  if (paginaActual.includes("checkout")) {
+    tbody.innerHTML = "";
+    cargarFila(carritoFrutas);
+  }
 });
 
 // //////////////////////////////////////////////////
@@ -47,9 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // Agregar un evento "click" masivo sobre todos los botones que conforman las Cards HTML. Crea la arrow function `activarClickEnBotones()`
 const activarClickEnBotones = () => {
   // Define la constante `botonesAgregar` que enlace a la colección de elementos `<button class=".button .button-outline .button-add"></button>`
-  const botonesAgregar = document.querySelectorAll(
-    "button.button.button-outline.button-add"
-  );
+  const botonesAgregar = document.querySelectorAll(".button-add");
   // Valida que el tipo de dato de la constante no sea `null`
   if (botonesAgregar === null) return console.error("Error");
   // Iterar sobre la colección de elementos, agregar un "eventListener" para el evento "click". Utiliza como callback el objeto global Event y ante cada click llama a la función `agregarCarrito()` pasándole como parámetro el `target.id` existente en el objeto global Event
@@ -57,5 +63,32 @@ const activarClickEnBotones = () => {
     botonAgregar.addEventListener("click", (e) => {
       agregarAlCarrito(parseInt(e.target.id));
     });
+  }
+};
+
+// ////////////////////////////////////////////////
+// Esto es de mi parte, no vi si en los videos de los módulos explicaban cómo cargar los productos en checkout.html
+// Seleccionar el contenedor de los elementos
+const tbody = document.querySelector("tbody");
+// Función "crearFila" que recibe como parámetro un objeto y que devuelva un bloque HTML (fila)
+const crearFila = function (producto) {
+  const card = `<tr>
+    <td>${producto.id}</td>
+    <td>${producto.nombre}</td>
+    <td>${producto.precio}</td>
+    <td>
+      <img
+        src="images/icon-fruits-64.png"
+        width="24px"
+      />
+    </td>
+  </tr>`;
+  return card;
+};
+// Función "cargarFila()" que recibe como parámetro un arreglo de productos. Iterar cada elemento en el arreglo y llamar a la función "crearFila()" para agregar cada elemento al DOM dentro de "tbody"
+const cargarFila = (productos) => {
+  for (let producto of productos) {
+    const card = crearFila(producto);
+    tbody.insertAdjacentHTML("beforeend", card);
   }
 };
