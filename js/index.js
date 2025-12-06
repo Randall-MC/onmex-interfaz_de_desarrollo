@@ -2,7 +2,7 @@
 // //////////////////////////////////////////////////
 // API 1
 // Importa el array "productos" en el archivo "productos.js"
-import { productos } from "./productos.js";
+// import { productos } from "./productos.js";
 import { agregarAlCarrito, carritoFrutas } from "./carrito.js";
 // Limpiar el contenido actual de "div.container"
 const contenedor = document.querySelector(".container");
@@ -34,11 +34,11 @@ const cargarProductos = function (productos) {
   activarClickEnBotones();
 };
 // Se ejecuta la función cuando el documento HTML está completamente analizado
+const paginaActual = window.location.pathname;
 document.addEventListener("DOMContentLoaded", () => {
-  const paginaActual = window.location.pathname;
   if (paginaActual.includes("index") || paginaActual === "/") {
     contenedor.innerHTML = "";
-    cargarProductos(productos);
+    obtenerProductos();
   }
 
   if (paginaActual.includes("checkout")) {
@@ -92,3 +92,45 @@ const cargarFila = (productos) => {
     tbody.insertAdjacentHTML("beforeend", card);
   }
 };
+
+// //////////////////////////////////////////////////
+// API 4
+// 1
+// Crear el archivo "productos.json" que contenga los productos de "productos.js"
+// Crear el arreglo `productos` vacío en "index.js"
+const productos = [];
+// Crear la constante `URL` que almacene la referencia a la ruta de "productos.json"
+const URL = "./js/productos.json";
+// Crear la función `obtenerProductos()` que utilice `fetch()` para obtener el contenido dentro de "productos.json" y almacenar el contenido dentro de `productos`
+const obtenerProductos = function () {
+  fetch(URL)
+    .then((response) => response.json())
+    .then((data) => {
+      productos.push(...data);
+      // Llamar a la función `cargarProductos(productos)` dentro de un método `.then`. El llamado a la función original debe ser quitado, porque ahora la función `obtenerProductos()` debe ser la función principal a llamar.
+      cargarProductos(productos);
+    })
+    .catch((err) => alert("Hubo un error", err));
+};
+
+// 2
+// Ya esá hecho, mover a "carrito.js" la lógica que se encarga de recuperar los datos almacenados en `localStorage` y de la lógica que se encarga de mostrar los la tabla
+
+// 3
+// Crear el evento para que al pulsar el botón comprar en "checkout.html", se muestre un mensaje de agradecimiento por la compra realizada.
+// Seleccionar el botón "Comprar"
+const btnComprar = document.querySelector("#btnComprar");
+if (paginaActual.includes("checkout")) {
+  btnComprar.addEventListener("click", () => {
+    alert("Compra realizada correctamente ✅");
+    // Después vaciar el arreglo `carritoFrutas`
+    productos.length = 0;
+    // Después vaciar el contenido de la propiedad en `localStorage`
+    localStorage.removeItem("carritoFrutas");
+    // Después vaciar la tabla HTML con los productos
+    tbody.innerHTML = "";
+    // Extra mio
+    // Redirigir al usuario a la página principal
+    window.location.href = "index.html";
+  });
+}
